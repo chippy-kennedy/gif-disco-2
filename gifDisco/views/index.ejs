@@ -130,6 +130,7 @@
         <h1>gifDisco!</h1>
       </div>
 
+				<h2 ng-show="isLoggedIn()"> Hello, {{ currentUser() }}</h2>
       <div ng-repeat="gif in gifs | orderBy:'-upvotes'">
         <span class="glyphicon glyphicon-thumbs-up" ng-click="incrementUpvotes(gif)">^</span>
         {{gif.upvotes}}

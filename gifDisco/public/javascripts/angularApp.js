@@ -173,9 +173,10 @@ function($stateProvider, $urlRouterProvider) {
 	}]);
 
 //Gif Controller
-app.controller('GifsCtrl', ['$scope','$stateParams','gifs',
-	function($scope, $stateParams, gifs){
+app.controller('GifsCtrl', ['$scope','$stateParams','gifs', 'auth',
+	function($scope, $stateParams, gifs, auth){
 		$scope.gif = gifs.gifs[$stateParams.id];
+		$scope.currentUser = auth.currentUser;
 
     // Add comment.
     $scope.addComment = function(){
