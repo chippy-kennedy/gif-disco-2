@@ -5,6 +5,12 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+//Mongo + Mongoose
+var mongoose = require('mongoose');
+require('./models/Gifs');
+require('./models/Comments');
+mongoose.connect('mongodb://localhost/news');
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
@@ -27,7 +33,7 @@ app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  var err = new Error('Sorry, Page Not Found');
   err.status = 404;
   next(err);
 });
