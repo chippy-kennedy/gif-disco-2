@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
+//token instead of more formal user session
 var jwt = require('jsonwebtoken');
+var jwtsecret = process.env.AUTHVARIABLE; 
 
 var UserSchema = new mongoose.Schema({
   username: {type: String, lowercase: true, unique: true},
@@ -10,7 +12,6 @@ var UserSchema = new mongoose.Schema({
 
 UserSchema.methods.setPassword = function(password){
   this.salt = bcrypt.genSaltSync(16);
-
   this.hash = bcrypt.hashSync(password, this.salt); 
 };
 
@@ -32,7 +33,7 @@ UserSchema.methods.generateJWT = function() {
     _id: this._id,
     username: this.username,
     exp: parseInt(exp.getTime() / 1000),
-  }, 'SECRET');
+  }, jwtsecret);
 };
 
 mongoose.model('User', UserSchema);

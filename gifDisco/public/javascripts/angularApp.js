@@ -19,15 +19,14 @@ function($stateProvider, $urlRouterProvider) {
 					return gifs.getAll();
 				}]
 			}
-    });
+    })
 
-	$stateProvider
 		.state('gifs', {
 			url: '/gifs/{id}',
 			templateUrl: '/gifs.html',
 			controller: 'GifsCtrl'
-		});
-	$stateProvider.state('login', {
+		})
+	.state('login', {
 		url: '/login',
 		templateUrl: '/login.html',
 		controller: 'AuthCtrl',
@@ -36,8 +35,8 @@ function($stateProvider, $urlRouterProvider) {
 				$state.go('home');
 			}
 		}]
-	});
-	$stateProvider.state('register', {
+	})
+	.state('register', {
 		url: '/register',
 		templateUrl: '/register.html',
 		controller: 'AuthCtrl',
@@ -53,7 +52,7 @@ function($stateProvider, $urlRouterProvider) {
 
 //Angular Services
 	//GIFS FACTORY
-	app.factory('gifs', ['$http', function($http){
+	app.factory('gifs', ['$http', 'auth', function($http, auth){
 		var o = {
 			gifs: []
 		};
@@ -67,17 +66,27 @@ function($stateProvider, $urlRouterProvider) {
 
 		//create() - new gif added
 		o.create = function(gif) {
-			return $http.post('/gifs', gif).success(function(data){
+			return $http.post('/gifs', gif, {
+				headers: {Authorization: 'Bearer '+auth.getToken()}
+			}).success(function(data){
 				o.gifs.push(data);
 			});
 		};
 
 		//increment upvote()
 		o.upvote = function(gif) {
-			return $http.put('/gifs/' + gif._id + '/upvote')
-				.success(function(data){
+			return $http.put('/gifs/' + gif._id + '/upvote', null, {
+				headers: {Authorization: 'Bearer '+auth.getToken()}
+			}).success(function(data){
 					gif.upvotes += 1;
-				});
+			});
+		};
+
+		//TODO: not sure if this is still hooked up
+		o.addComment = function(id, comment) {
+			return $http.post('/gifs/' + id + '/gifs', comment, {
+				headers: {Authorization: 'Bearer '+auth.getToken()}
+			});
 		};
 
 		return o;
@@ -139,13 +148,12 @@ function($stateProvider, $urlRouterProvider) {
 
 
 //Main Controller
-	app.controller('MainCtrl', ['$scope', 'gifs',
-		function($scope, gifs){
+	app.controller('MainCtrl', ['$scope', 'gifs', 'auth',
+		function($scope, gifs, auth){
 			
 			//set scope test
 			$scope.test = 'Hello world!';
-			
-			//
+			$scope.isLoggedIn = auth.isLoggedIn;	
 			$scope.gifs = gifs.gifs;
 			
 			$scope.addGif = function(){
@@ -205,7 +213,7 @@ function($scope, $state, auth){
       $state.go('home');
     });
   };
-}])
+}]);
 
 //Navigation Controller
 app.controller('NavCtrl', ['$scope','auth',

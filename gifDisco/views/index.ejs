@@ -30,7 +30,7 @@
 
 <script type="text/ng-template" id="/login.html">
   <div class="page-header">
-    <h1>Flapper News</h1>
+    <h1>gifDisco</h1>
   </div>
 
   <div ng-show="error" class="alert alert-danger row">
@@ -61,7 +61,7 @@
 
 <script type="text/ng-template" id="/register.html">
   <div class="page-header">
-    <h1>Flapper News</h1>
+    <h1>gifDisco</h1>
   </div>
 
   <div ng-show="error" class="alert alert-danger row">
@@ -146,7 +146,7 @@
         </span>
       </div>
 
-      <form ng-submit="addGif()"
+      <form ng-submit="addGif()" ng-show="isLoggedIn()"
         style="margin-top:30px;">
         <h3>Add a new gif</h3>
 
