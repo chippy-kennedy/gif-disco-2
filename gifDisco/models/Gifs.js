@@ -4,7 +4,8 @@ var GifSchema = new mongoose.Schema({
   title: String,
   link: String,
   upvotes: {type: Number, default: 0},
-  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }]
+	user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+  //comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }]
 });
 
 GifSchema.methods.upvote = function(cb) {

@@ -7,7 +7,9 @@ var jwtsecret = process.env.AUTHVARIABLE;
 var UserSchema = new mongoose.Schema({
   username: {type: String, lowercase: true, unique: true},
   hash: String,
-  salt: String
+  salt: String,
+
+	gifs: [{ type: mongoose.Schema.Types.ObjectID, ref: 'Gif' }]
 });
 
 UserSchema.methods.setPassword = function(password){
