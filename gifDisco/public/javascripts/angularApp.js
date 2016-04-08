@@ -27,11 +27,32 @@ function($stateProvider, $urlRouterProvider) {
 			templateUrl: '/gifs.html',
 			controller: 'GifsCtrl'
 		});
+	$stateProvider.state('login', {
+		url: '/login',
+		templateUrl: '/login.html',
+		controller: 'AuthCtrl',
+		onEnter: ['$state', 'auth', function($state, auth){
+			if(auth.isLoggedIn()){
+				$state.go('home');
+			}
+		}]
+	});
+	$stateProvider.state('register', {
+		url: '/register',
+		templateUrl: '/register.html',
+		controller: 'AuthCtrl',
+		onEnter: ['$state', 'auth', function($state, auth){
+			if(auth.isLoggedIn()){
+				$state.go('home');
+			}
+		}]
+	});
 
   $urlRouterProvider.otherwise('home');
 }]);
 
 //Angular Services
+	//GIFS FACTORY
 	app.factory('gifs', ['$http', function($http){
 		var o = {
 			gifs: []
@@ -60,6 +81,60 @@ function($stateProvider, $urlRouterProvider) {
 		};
 
 		return o;
+	}]);
+
+	//AUTH FACTORY
+	//TODO:is this ok not being async?
+	//Lots of help on the factory from Passport & (https://thinkster.io/mean-stack-tutorial#wiring-everything-up)
+	app.factory('auth', ['$http', '$window', function($http, $window){
+		 var auth = {};
+
+			auth.saveToken = function (token){
+				$window.localStorage['gifDisco-token'] = token;
+			};
+
+			auth.getToken = function (){
+				return $window.localStorage['gifDisco-token'];
+			}
+
+			auth.isLoggedIn = function(){
+				var token = auth.getToken();
+
+				if(token){
+					var payload = JSON.parse($window.atob(token.split('.')[1]));
+
+					return payload.exp > Date.now() / 1000;
+				} else {
+					return false;
+				}
+			};
+
+			auth.currentUser = function(){
+				if(auth.isLoggedIn()){
+					var token = auth.getToken();
+					var payload = JSON.parse($window.atob(token.split('.')[1]));
+
+					return payload.username;
+				}
+			};
+
+			auth.logIn = function(user){
+				return $http.post('/login', user).success(function(data){
+					auth.saveToken(data.token);
+				});
+			};
+
+			auth.register = function(user){
+				return $http.post('/register', user).success(function(data){
+					auth.saveToken(data.token);
+				});
+			};
+
+			auth.logOut = function(){
+				$window.localStorage.removeItem('flapper-news-token');
+			};
+
+		return auth;
 	}]);
 
 
@@ -110,6 +185,35 @@ app.controller('GifsCtrl', ['$scope','$stateParams','gifs',
 }]);
 
 
+//Auth Controller
+app.controller('AuthCtrl', ['$scope','$state','auth',
+function($scope, $state, auth){
+  $scope.user = {};
+
+  $scope.register = function(){
+    auth.register($scope.user).error(function(error){
+      $scope.error = error;
+    }).then(function(){
+      $state.go('home');
+    });
+  };
+
+  $scope.logIn = function(){
+    auth.logIn($scope.user).error(function(error){
+      $scope.error = error;
+    }).then(function(){
+      $state.go('home');
+    });
+  };
+}])
+
+//Navigation Controller
+app.controller('NavCtrl', ['$scope','auth',
+	function($scope, auth){
+		$scope.isLoggedIn = auth.isLoggedIn;
+		$scope.currentUser = auth.currentUser;
+		$scope.logOut = auth.logOut;
+}]);
 
 
 

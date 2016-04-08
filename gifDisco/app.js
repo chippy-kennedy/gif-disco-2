@@ -11,6 +11,9 @@ require('./models/Gifs');
 require('./models/Comments');
 mongoose.connect('mongodb://localhost/news');
 
+//Passport - login
+var passport = require('passport');
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
 

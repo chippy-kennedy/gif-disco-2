@@ -6,6 +6,11 @@ var mongoose = require('mongoose');
 var Gif = mongoose.model('Gif');
 var Comment = mongoose.model('Comment');
 
+//passport - routes
+//TODO: get api secret for PP and put in env variable
+var jwt = require('express-jwt');
+var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
+
 //GET - return list of gifs
 router.get('/gifs', function(req, res, next) {
 
@@ -20,9 +25,10 @@ router.get('/gifs', function(req, res, next) {
 
 
 //POST - add gif to database
-router.post('/gifs', function(req, res, next) {
+router.post('/gifs', auth, function(req, res, next) {
   var gif = new Gif(req.body);
-
+	gif.author = req.payload.username;
+	
   gif.save(function(err, gif){
     if(err){ return next(err); }
 
@@ -49,7 +55,7 @@ router.get('/gifs/:gif', function(req, res) {
 });
 
 //PUT - increment upvote on GIF
-router.put('/gifs/:gif/upvote', function(req, res, next) {
+router.put('/gifs/:gif/upvote', auth, function(req, res, next) {
   req.gif.upvote(function(err, gif){
     if (err) { return next(err); }
 
