@@ -1,21 +1,21 @@
-<html>
 <head>
   <title>gifDisco!</title>
   <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
 
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.10/angular.min.js"></script>
-	<script src="/javascripts/angularApp.js"></script>
+  <script src="app.js"></script>
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.js"></script>
   <style> .glyphicon-thumbs-up { cursor:pointer } </style>
 </head>
+<body ng-app="gifDisco!" ng-controller="MainCtrl">
+			<div class="row">
+				<div class="col-md-6 col-md-offset-3">
+					<ui-view></ui-view>
+				</div>
+			</div>
+  
 
-<body ng-app="gifDisco">
-  <div class="row">
-    <div class="col-md-6 col-md-offset-3">
-      <ui-view></ui-view>
-    </div>
-  </div>
-
+    
 	<script type="text/ng-template" id="/home.html">
 			<div class="page-header">
         <h1>gifDisco!</h1>
@@ -32,9 +32,6 @@
           <span ng-hide="post.link">
             {{post.title}}
           </span>
-					<span>
-						<a href="#/posts/{{$index}}">Comments</a>
-					</span>
 					<span>
 						<a href="#/posts/{{$index}}">Comments</a>
 					</span>
@@ -60,6 +57,7 @@
         <button type="submit" class="btn btn-primary">Post</button>
       </form>
 </script>
+
 <script type="text/ng-template" id="/posts.html">
   <div class="page-header">
     <h3>
@@ -79,7 +77,10 @@
     <span style="font-size:20px; margin-left:10px;">
       {{comment.body}}
     </span>
-  </div>
-</script>
+  </div
+</script
+
+
+
 </body>
 </html>
