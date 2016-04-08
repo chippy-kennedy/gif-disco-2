@@ -20,3 +20,11 @@ npm start
 //app is on local host or server - http://192.241.186.9:3000/
 
 
+
+Help from...
+http://mean.io/#!/
+https://thinkster.io/mean-stack-tutorial
+https://angular.io/
+...and mcuh more
+
+
